@@ -1,1 +1,31 @@
+# AutoHotkeyの一時ファイル
+*.exe
+*.ahk.bak
+*.ahk~
+
+# プロジェクト固有のディレクトリ
 old/
+backup/
+temp/
+
+# Windows固有のファイル
+Thumbs.db
+desktop.ini
+
+# エディタの一時ファイル
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# 個人設定ファイル
+user_config.ini
+personal_settings.ahk
+
+# ログファイル
+*.log
+logs/
+
+# テスト関連
+test/
+tests/
