@@ -5,18 +5,18 @@ AutoHotkeyを使用したキーボード・マウス操作の拡張ツール群�
 ## ディレクトリ構成
 
 AHK-Tools/
-├── main.ahk # メインスクリプト
-├── Search.ahk # テキスト検索機能
-├── apps/ # アプリケーション固有の設定
-│ ├── browser.ahk # ブラウザ向け設定
-│ ├── office.ahk # Microsoft Office向け設定
-│ ├── other_apps.ahk # その他アプリケーション設定
-│ └── JIS2US.ahk # JIS配列をUS配列に変換
-└── shortcuts/ # 共通ショートカット設定
-├── cursor_movement.ahk # カーソル移動
-├── editing.ahk # テキスト編集
-├── mouse_actions.ahk # マウス操作
-└── symbols.ahk # 記号入力
+├── main.ahk           # メインスクリプト
+├── Search.ahk         # テキスト検索機能
+├── apps/             # アプリケーション固有の設定
+│   ├── browser.ahk    # ブラウザ向け設定
+│   ├── office.ahk     # Microsoft Office向け設定
+│   ├── other_apps.ahk # その他アプリケーション設定
+│   └── JIS2US.ahk     # JIS配列をUS配列に変換
+└── shortcuts/        # 共通ショートカット設定
+    ├── cursor_movement.ahk # カーソル移動
+    ├── editing.ahk        # テキスト編集
+    ├── mouse_actions.ahk  # マウス操作
+    └── symbols.ahk        # 記号入力
 
 ## 主な機能
 
