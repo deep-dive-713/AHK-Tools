@@ -3,6 +3,9 @@
 *.ahk.bak
 *.ahk~
 
+# ドキュメントを除外
+docs/
+
 # プロジェクト固有のディレクトリ
 old/
 backup/
