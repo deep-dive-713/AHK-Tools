@@ -1,66 +1,188 @@
-;=========================================
-; バージョン管理とアップデートチェック機能
-;=========================================
-#Requires AutoHotkey v1.1
-#Include %A_ScriptDir%\Lib\JSON.ahk  ; JSONライブラリを追加
-SetWorkingDir %A_ScriptDir%
+; 定数定義
+global VERSION := "0.0.0"
+CONFIG_DIR := A_ScriptDir . "\config"
+CONFIG_FILE := CONFIG_DIR . "\settings.ini"
+LOG_DIR := A_ScriptDir . "\logs"
+DEBUG_LOG := LOG_DIR . "\debug.log"
+ERROR_LOG := LOG_DIR . "\error.log"
 
-;=========================================
-; グローバル変数の定義
-;=========================================
-global VERSION := "1.0.0"            ; 現在のバージョン
-global CHECK_INTERVAL := 24          ; アップデートチェックの間隔（24時間 = 1日）
+; メッセージ定義（UTF-8で保存すること）
+UPDATE_TITLE = アップデート通知
+UPDATE_AVAILABLE = 新しいバージョンが利用可能です！
+CURRENT_VERSION = 現在のバージョン: 
+NEW_VERSION = 新しいバージョン: 
+PRERELEASE_TEXT = （プレリリース）
+RELEASE_NOTES = 更新内容:
+BTN_DOWNLOAD = ダウンロードページへ
+BTN_REMIND = 後で通知
+BTN_SKIP = このバージョンをスキップ
 
-;=========================================
-; アップデートチェック関連の関数
-;=========================================
-; 定期的なアップデートチェックを行う関数
-CheckUpdateWithInterval() {
-    ; 前回のチェック時刻を読み込み
-    IniRead, lastCheck, %A_ScriptDir%\config.ini, Update, LastCheck, 0
+; 初期化処理
+InitializeConfig() {
+    global CONFIG_DIR, CONFIG_FILE, LOG_DIR, DEBUG_LOG, ERROR_LOG
     
-    ; 前回のチェックから24時間が経過したかを確認
-    timeDiff := A_Now
-    EnvSub, timeDiff, lastCheck, Hours
+    ; ディレクトリの作成
+    IfNotExist, %CONFIG_DIR%
+    {
+        FileCreateDir, %CONFIG_DIR%
+        if ErrorLevel
+        {
+            MsgBox, Failed to create config directory: %CONFIG_DIR%
+            return false
+        }
+    }
     
-    ; 24時間が経過していれば新バージョンをチェック
-    if (timeDiff >= CHECK_INTERVAL) {
-        CheckUpdate()
-        ; 最終チェック時刻を更新
-        IniWrite, %A_Now%, %A_ScriptDir%\config.ini, Update, LastCheck
+    IfNotExist, %LOG_DIR%
+    {
+        FileCreateDir, %LOG_DIR%
+        if ErrorLevel
+        {
+            MsgBox, Failed to create log directory: %LOG_DIR%
+            return false
+        }
+    }
+    
+    ; 設定ファイルの初期化
+    IfNotExist, %CONFIG_FILE%
+    {
+        IniWrite, "", %CONFIG_FILE%, Update, SkipVersion
+        if ErrorLevel
+        {
+            MsgBox, Failed to initialize config file: %CONFIG_FILE%
+            return false
+        }
+    }
+    
+    ; ログファイルの初期化
+    IfNotExist, %DEBUG_LOG%
+    {
+        FileAppend,, %DEBUG_LOG%
+        if ErrorLevel
+        {
+            MsgBox, Failed to initialize debug log: %DEBUG_LOG%
+            return false
+        }
+    }
+    
+    IfNotExist, %ERROR_LOG%
+    {
+        FileAppend,, %ERROR_LOG%
+        if ErrorLevel
+        {
+            MsgBox, Failed to initialize error log: %ERROR_LOG%
+            return false
+        }
+    }
+    
+    return true
+}
+
+; ログ出力関数
+WriteLog(message, isError = false) {
+    global DEBUG_LOG, ERROR_LOG
+    
+    FormatTime, timestamp,, yyyy-MM-dd HH:mm:ss
+    logFile := isError ? ERROR_LOG : DEBUG_LOG
+    
+    FileAppend, %timestamp% - %message%`n, %logFile%
+    if ErrorLevel
+    {
+        MsgBox, Failed to write to log file: %logFile%
     }
 }
 
-; GitHubから最新バージョンを取得してチェックする関数
-CheckUpdate() {
-    try {
-        ; GitHubのAPIを使用して最新バージョン情報を取得
-        whr := ComObject("WinHttp.WinHttpRequest.5.1")
-        whr.Open("GET", "https://api.github.com/repos/YourUsername/AHK-Tools/releases/latest", false)
-        whr.Send()
-        
-        ; レスポンスをJSONとして解析
-        response := JSON.Load(whr.ResponseText)
-        latestVersion := StrReplace(response.tag_name, "v", "")
-        
-        ; 新バージョンが利用可能な場合はユーザーに通知
-        if (latestVersion != VERSION) {
-          releaseBody := response["body"]
-          releaseUrl := response["html_url"]
-          
-          MsgBox, 4, AHK-Tools アップデート通知, 新しいバージョン（v%latestVersion%）が利用可能です。`n`n【更新内容】`n%releaseBody%`n`nダウンロードページを開きますか？
-          
-          IfMsgBox Yes
-              Run %releaseUrl%
-      }
-  } catch e {
-      ; エラー時は静かに失敗（ユーザーの作業を妨げない）
-      FileAppend, Update check failed: %e%.Message`n, %A_ScriptDir%\error.log
-  }
+; 設定ファイルの操作
+WriteSkipVersion(version) {
+    IniWrite, %version%, %CONFIG_FILE%, Update, SkipVersion
 }
 
-;=========================================
-; タイマー設定
-;=========================================
-; 24時間（1日）ごとにアップデートチェックを実行
-SetTimer, CheckUpdateWithInterval, 86400000  ; 86400000ミリ秒 = 24時間
+ReadSkipVersion() {
+    IniRead, skipVersion, %CONFIG_FILE%, Update, SkipVersion, ""
+    return skipVersion
+}
+
+; アップデートチェック
+CheckUpdate() {
+    try {
+        ; 初期化
+        InitializeConfig()
+        WriteLog("Starting update check")
+        
+        ; GitHubからリリース情報を取得
+        url := "https://api.github.com/repos/deep-dive-713/AHK-Tools/releases"
+        WriteLog("Downloading from: " . url)
+        
+        tmpFile := A_ScriptDir . "\temp_release.json"
+        UrlDownloadToFile, %url%, %tmpFile%
+        
+        if (!FileExist(tmpFile)) {
+            throw "Failed to download release information"
+        }
+        
+        FileRead, responseText, %tmpFile%
+        FileDelete, %tmpFile%
+        
+        WriteLog("Response: " . responseText)
+        
+        ; バージョン情報の解析
+        RegExMatch(responseText, "U)""tag_name"":""([^""]+)""", tag)
+        WriteLog("Found tag: " . tag1)
+        
+        ; バージョン番号の抽出
+        latestVersion := RegExReplace(tag1, "^v")
+        WriteLog("Extracted version: " . latestVersion)
+        WriteLog("Current VERSION: " . VERSION)
+        
+        ; スキップバージョンのチェック
+        skipVersion := ReadSkipVersion()
+        if (skipVersion = latestVersion) {
+            WriteLog("Skipping version: " . latestVersion)
+            return
+        }
+        
+        ; バージョン比較
+        if (latestVersion != VERSION) {
+            RegExMatch(responseText, "U)""prerelease"":([^,]+)", isPrerelease)
+            preReleaseText := isPrerelease1 = "true" ? PRERELEASE_TEXT : ""
+            
+            RegExMatch(responseText, "U)""body"":""([^""]+)""", releaseNotes)
+            notes := releaseNotes1 ? "`n`n" . RELEASE_NOTES . "`n" . releaseNotes1 : ""
+            
+            message := UPDATE_AVAILABLE . "`n"
+                    . CURRENT_VERSION . VERSION . "`n"
+                    . NEW_VERSION . latestVersion . preReleaseText
+                    . notes
+            
+            WriteLog("Showing update notification")
+            
+            Gui, UpdateNotify:New, +AlwaysOnTop
+            Gui, Font, s10
+            Gui, Add, Text,, %message%
+            Gui, Add, Button, gOpenReleasePage w120, %BTN_DOWNLOAD%
+            Gui, Add, Button, gRemindLater x+10 w120, %BTN_REMIND%
+            Gui, Add, Button, gSkipVersion x+10 w120, %BTN_SKIP%
+            Gui, Show,, %UPDATE_TITLE%
+            return
+            
+            OpenReleasePage:
+                Run, https://github.com/deep-dive-713/AHK-Tools/releases/latest
+                Gui, UpdateNotify:Destroy
+            return
+            
+            RemindLater:
+                Gui, UpdateNotify:Destroy
+            return
+            
+            SkipVersion:
+                WriteSkipVersion(latestVersion)
+                WriteLog("Version skipped: " . latestVersion)
+                Gui, UpdateNotify:Destroy
+            return
+        }
+        
+    } catch e {
+        error_msg := "Error: " . (IsObject(e) ? "Download failed" : e)
+        WriteLog(error_msg, true)
+        WriteLog("Debug: " . e, true)
+    }
+}

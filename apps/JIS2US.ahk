@@ -1,8 +1,8 @@
-﻿; VWP時 JIS配列キーボード 記号入力対応
+; VWP時 JIS配列キーボード 記号入力対応
 ; JIS配列キーボードを使っている人向け、US配列の人は要コメントアウト
 ; (参考)US配列スキャンコード：https://so-zou.jp/pc/keyboard/scan-code.htm
 
-#IfWinActive, ahk_exe CDViewer.exe
+#IfWinActive, ahk_exe etxc.exe
     ; 1段目
     !::Send, +{sc002}
     "::Send, +{sc028}

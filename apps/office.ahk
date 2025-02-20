@@ -1,29 +1,6 @@
-#SingleInstance force
-
 ;=========================================
 ; Microsoft Office関連の設定
 ;=========================================
-
-;-----------------------------------------
-; PowerPoint: マウスホイールで左右スクロール
-;-----------------------------------------
-#IfWinActive ahk_exe POWERPNT.EXE
-    +WheelUp::  ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,1)   ; Shift+ホイール上で左スクロール
-    +WheelDown::ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,1,0)   ; Shift+ホイール下で右スクロール
-    ; WheelLeft::ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,1)  ; 左スクロール（チルト左）
-    ; WheelRight::ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,1,0) ; 右スクロール（チルト右）
-#IfWinActive
-
-;-----------------------------------------
-; Word: マウスホイールで左右スクロール
-;-----------------------------------------
-#IfWinActive ahk_exe WINWORD.EXE
-    +WheelUp::  ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,0,1) ; Shift+ホイール上で左スクロール
-    +WheelDown::ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,1,0) ; Shift+ホイール下で右スクロール
-    ; WheelLeft:: ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,0,1) ; 左スクロール（チルト左）
-    ; WheelRight::ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,1,0) ; 右スクロール（チルト右）
-#IfWinActive
-
 ;-----------------------------------------
 ; Excel: 拡張機能
 ;-----------------------------------------
@@ -71,7 +48,20 @@
             Send, {F2}
         }
     return
-
+    
+    ; Shiftキーのダブルタップで改行を挿入
+    Shift::
+        Keywait, Shift, U           ; Shiftキーが離されるまで待機
+        Keywait, Shift, D T0.2      ; 0.2秒以内に次のShiftキーが押されるのを待機
+        If (ErrorLevel=1)           ; タイムアウトした場合（シングルタップ）
+        {
+            Send,{Shift}            ; 通常のShiftキーとして動作
+        }
+        else                        ; ダブルタップの場合
+        {
+            Send, +{Enter}          ; Alt+Enterで改行を挿入
+        }
+    return
     
 #IfWinActive
 
@@ -84,7 +74,9 @@
     F13 & k::dllcall("keybd_event", int, 0x28, int, 0, int, 1, int, 0) ; F13+Kで下へ
     F13 & WheelUp::Send, ^{PgUp}    ; F13+ホイール上で上のページへ
     F13 & WheelDown::Send, ^{PgDn}  ; F13+ホイール上で下のページへ
-    
+    F13 & WheelLeft::Send, ^+{Tab}  ; F13+ホイール上で上のページへ
+    F13 & WheelRight::Send, ^{Tab}  ; F13+ホイール上で下のページへ
+
     ; カスタムスクロール制御
     ; Shift+ホイールで左右スクロール
     +WheelUp::

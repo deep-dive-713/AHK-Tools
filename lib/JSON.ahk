@@ -50,9 +50,9 @@ class JSON
 			this.keys := this.rev ? {} : false
 
 			static quot := Chr(34), bashq := "\" . quot
-			     , json_value := quot . "{[01234567890-tfn"
-			     , json_value_or_array_closing := quot . "{[]01234567890-tfn"
-			     , object_key_or_object_closing := quot . "}"
+				, json_value := quot . "{[01234567890-tfn"
+				, json_value_or_array_closing := quot . "{[]01234567890-tfn"
+				, object_key_or_object_closing := quot . "}"
 
 			key := ""
 			is_key := false
@@ -87,11 +87,11 @@ class JSON
 					; sacrifice readability for minor(actually negligible) performance gain
 						(ch == "{")
 							? ( is_key := true
-							  , value := {}
-							  , next := object_key_or_object_closing )
+							, value := {}
+							, next := object_key_or_object_closing )
 						; ch == "["
 							: ( value := json_array ? new json_array : []
-							  , next := json_value_or_array_closing )
+							, next := json_value_or_array_closing )
 						
 						ObjInsertAt(stack, 1, value)
 
@@ -112,7 +112,7 @@ class JSON
 							if (!i)
 								this.ParseError("'", text, pos)
 
-							  value := StrReplace(value,  "\/",  "/")
+							value := StrReplace(value,  "\/",  "/")
 							, value := StrReplace(value, bashq, quot)
 							, value := StrReplace(value,  "\b", "`b")
 							, value := StrReplace(value,  "\f", "`f")
@@ -180,15 +180,15 @@ class JSON
 			col := pos - InStr(text, "`n",, -(StrLen(text)-pos+1))
 			msg := Format("{1}`n`nLine:`t{2}`nCol:`t{3}`nChar:`t{4}"
 			,     (expect == "")     ? "Extra data"
-			    : (expect == "'")    ? "Unterminated string starting at"
-			    : (expect == "\")    ? "Invalid \escape"
-			    : (expect == ":")    ? "Expecting ':' delimiter"
-			    : (expect == quot)   ? "Expecting object key enclosed in double quotes"
-			    : (expect == qurly)  ? "Expecting object key enclosed in double quotes or object closing '}'"
-			    : (expect == ",}")   ? "Expecting ',' delimiter or object closing '}'"
-			    : (expect == ",]")   ? "Expecting ',' delimiter or array closing ']'"
-			    : InStr(expect, "]") ? "Expecting JSON value or array closing ']'"
-			    :                      "Expecting JSON value(string, number, true, false, null, object or array)"
+				: (expect == "'")    ? "Unterminated string starting at"
+				: (expect == "\")    ? "Invalid \escape"
+				: (expect == ":")    ? "Expecting ':' delimiter"
+				: (expect == quot)   ? "Expecting object key enclosed in double quotes"
+				: (expect == qurly)  ? "Expecting object key enclosed in double quotes or object closing '}'"
+				: (expect == ",}")   ? "Expecting ',' delimiter or object closing '}'"
+				: (expect == ",]")   ? "Expecting ',' delimiter or array closing ']'"
+				: InStr(expect, "]") ? "Expecting JSON value or array closing ']'"
+				:                      "Expecting JSON value(string, number, true, false, null, object or array)"
 			, line, col, pos)
 
 			static offset := A_AhkVersion<"2" ? -3 : -4
@@ -317,7 +317,7 @@ class JSON
 			static quot := Chr(34), bashq := "\" . quot
 
 			if (string != "") {
-				  string := StrReplace(string,  "\",  "\\")
+				string := StrReplace(string,  "\",  "\\")
 				; , string := StrReplace(string,  "/",  "\/") ; optional in ECMAScript
 				, string := StrReplace(string, quot, bashq)
 				, string := StrReplace(string, "`b",  "\b")

@@ -2,6 +2,7 @@
 ; AHK-Tools メインスクリプト
 ;=========================================
 #Requires AutoHotkey v1.1
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 
 ;=========================================
 ; 基本設定
@@ -13,6 +14,16 @@ SetWorkingDir %A_ScriptDir%        ; スクリプトの作業ディレクトリ�
 #MaxHotkeysPerInterval, 200        ; ホットキーの連打制限回数
 
 ;=========================================
+; サブスクリプトの実行と終了処理
+;=========================================
+; office.ahkを別プロセスとして実行
+Run, AutoHotkey.exe "%A_ScriptDir%\apps\word_ppt.ahk"
+; Run, AutoHotkey.exe "%A_ScriptDir%\apps\word_ppt_2016.ahk" ; Office2016用
+
+; スクリプト終了時の処理
+OnExit, ExitSub
+
+;=========================================
 ; 外部スクリプトの読み込み
 ;=========================================
 ; バージョン管理とアップデート機能
@@ -22,13 +33,13 @@ SetWorkingDir %A_ScriptDir%        ; スクリプトの作業ディレクトリ�
 #Include %A_ScriptDir%/Search.ahk
 
 ; F13 + キー コマンド群
-#Include %A_ScriptDir%\shortcuts/cursor_movement.ahk    ; カーソル移動
+#Include %A_ScriptDir%\shortcuts/cursor_movement.ahk   ; カーソル移動
 #Include %A_ScriptDir%\shortcuts/editing.ahk           ; テキスト編集
 #Include %A_ScriptDir%\shortcuts/mouse_actions.ahk     ; マウス操作
 #Include %A_ScriptDir%\shortcuts/symbols.ahk           ; 記号入力
 
 ; アプリケーション固有の設定
-#Include %A_ScriptDir%\apps/office.ahk                 ; Microsoft Office
+#Include %A_ScriptDir%\apps/office.ahk                ; Microsoft Office
 #Include %A_ScriptDir%\apps/browser.ahk               ; ブラウザ
 #Include %A_ScriptDir%\apps/JIS2US.ahk                ; JIS/US配列変換
 #Include %A_ScriptDir%\apps/other_apps.ahk            ; その他アプリ
@@ -75,14 +86,8 @@ return
 +MButton::search()
 
 ;=========================================
-; サブスクリプトの実行と終了処理
+; 終了処理
 ;=========================================
-; office.ahkを別プロセスとして実行
-Run, AutoHotkey.exe "%A_ScriptDir%\apps\office.ahk"
-
-; スクリプト終了時の処理
-OnExit, ExitSub
-
 ExitSub:
     ; office.ahkプロセスを終了
     Process, Close, AutoHotkey.exe "%A_ScriptDir%\apps\office.ahk"
