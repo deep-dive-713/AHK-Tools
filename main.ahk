@@ -7,18 +7,18 @@
 ;=========================================
 ; 基本設定
 ;=========================================
-#SingleInstance, Force              ; 重複起動を防止
-SendMode Input                      ; 高速なキー送信モードを使用
-SetWorkingDir %A_ScriptDir%        ; スクリプトの作業ディレクトリを設定
-#HotkeyInterval, 2000              ; ホットキーの連打制限間隔
-#MaxHotkeysPerInterval, 200        ; ホットキーの連打制限回数
+#SingleInstance, Force       ; 重複起動を防止
+SendMode Input               ; 高速なキー送信モードを使用
+SetWorkingDir %A_ScriptDir%  ; スクリプトの作業ディレクトリを設定
+#HotkeyInterval, 2000        ; ホットキーの連打制限間隔
+#MaxHotkeysPerInterval, 200  ; ホットキーの連打制限回数
 
 ;=========================================
 ; サブスクリプトの実行と終了処理
 ;=========================================
-; office.ahkを別プロセスとして実行
-Run, AutoHotkey.exe "%A_ScriptDir%\apps\word_ppt.ahk"
-; Run, AutoHotkey.exe "%A_ScriptDir%\apps\word_ppt_2016.ahk" ; Office2016用
+; word_ppt.ahkを別プロセスとして実行し、PIDを保存
+Run, AutoHotkey.exe "%A_ScriptDir%\apps\word_ppt.ahk",,,WordPptPID
+; Run, AutoHotkey.exe "%A_ScriptDir%\apps\word_ppt_2016.ahk",,,WordPptPID ; Office2016用
 
 ; スクリプト終了時の処理
 OnExit, ExitSub
@@ -40,8 +40,9 @@ OnExit, ExitSub
 
 ; アプリケーション固有の設定
 #Include %A_ScriptDir%\apps/office.ahk                ; Microsoft Office
+; #Include %A_ScriptDir%\apps/office2016.ahk            ; Microsoft Office2016用
 #Include %A_ScriptDir%\apps/browser.ahk               ; ブラウザ
-#Include %A_ScriptDir%\apps/JIS2US.ahk                ; JIS/US配列変換
+#Include %A_ScriptDir%\apps/JIS2US.ahk                ; JIS/US配列変換（JIS配列キーボードを使っている人向け、US配列の人は要コメントアウト）
 #Include %A_ScriptDir%\apps/other_apps.ahk            ; その他アプリ
 
 ;=========================================
@@ -89,6 +90,6 @@ return
 ; 終了処理
 ;=========================================
 ExitSub:
-    ; office.ahkプロセスを終了
-    Process, Close, AutoHotkey.exe "%A_ScriptDir%\apps\office.ahk"
+    ; word_ppt.ahkプロセスを終了
+    Process, Close, %WordPptPID%
     ExitApp

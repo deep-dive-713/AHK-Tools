@@ -22,8 +22,8 @@ search(){
         return
     }
     
-    ; クリップボードの内容から先頭と末尾の空白を削除
-    selectedText := Trim(Clipboard)  ; 先頭のスペースを削除
+    ; クリップボードの内容を整形
+    selectedText := Trim(Clipboard)  ; 文字列の前後のスペース、タブ、改行を削除
     
     ; パス情報を分解
     SplitPath, selectedText, name, dir, ext, noext, drive  ; Trim後のselectedTextを使用
@@ -69,10 +69,10 @@ doWeb(str, drive, dir){
     ; & をエスケープ
     str := StrReplace(str, "&", "%26")  ; & をエスケープ
     str := StrReplace(str, " ", "+")    ; スペースを+に変換
-    if((isWeb := isURL(drive, str)) != ""){                    ; 完全なURLの場合
+    if((isWeb := isURL(drive, str)) != ""){                   ; 完全なURLの場合
     }else if((isWeb := isURLlike(str, drive, dir)) != ""){    ; URLっぽい文字列の場合
     }else{
-        isWeb := getWebSearch(str)                             ; 検索用URLの生成
+        isWeb := getWebSearch(str)                            ; 検索用URLの生成
     }
     if(isWeb != ""){
         Run, %isWeb%
@@ -97,7 +97,7 @@ isURLlike(str, drive, dir){
     if(InStr(drive, "ttp://") = 1 || InStr(drive, "ttps://") = 1){
         return "h" . dir                    ; 先頭のhを補完
     }else if(drive = "" && InStr(str, "www.") = 1){
-        return "http://" . str             ; http://を補完
+        return "http://" . str              ; http://を補完
     }
     return ""
 }

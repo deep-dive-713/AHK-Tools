@@ -17,18 +17,18 @@
         SendInput {Right}
         SetScrollLockState, Off
     Return
-    ;     ; 左スクロール（チルト左）
-    ;     WheelLeft::
-    ;     SetScrollLockState, On
-    ;     SendInput {Left}
-    ;     SetScrollLockState, Off
-    ; Return
-    ;     ; 右スクロール（チルト右）
-    ;     WheelRight::
-    ;     SetScrollLockState, On
-    ;     SendInput {Right}
-    ;     SetScrollLockState, Off
-    ; Return
+    ; 左スクロール（チルト左）
+        WheelLeft::
+        SetScrollLockState, On
+        SendInput {Left}
+        SetScrollLockState, Off
+    Return
+    ; 右スクロール（チルト右）
+        WheelRight::
+        SetScrollLockState, On
+        SendInput {Right}
+        SetScrollLockState, Off
+    Return
 
     ; シート切り替えショートカット
     F13 & WheelUp::  Send, ^{PgUp} ; マウスホイール上でシートを左へ
