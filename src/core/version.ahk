@@ -8,11 +8,13 @@
 ; グローバル変数の定義
 ;=========================================
 global VERSION := "0.0.1"                    ; 現在のバージョン
-global CHECK_INTERVAL_HOURS := 24            ; アップデートチェックの間隔（時間）
+global CHECK_INTERVAL_HOURS := 1            ; アップデートチェックの間隔（時間）
 global CHECK_INTERVAL_MS := CHECK_INTERVAL_HOURS * 60 * 60 * 1000  ; ミリ秒に変換
 global LOG_DIR := A_ScriptDir . "\logs"      ; ログディレクトリのパス
 global ERROR_LOG := LOG_DIR . "\error.log"   ; エラーログのパス
 global DEBUG_LOG := LOG_DIR . "\debug.log"   ; デバッグログのパス
+global CONFIG_DIR := A_ScriptDir . "\config"        ; configディレクトリのパス
+global CONFIG_FILE := CONFIG_DIR . "\settings.ini"  ; configファイルのパス
 
 ;=========================================
 ; 初期化実行
@@ -28,6 +30,16 @@ IfNotExist, %LOG_DIR%
     }
 }
 
+; 設定ディレクトリの作成
+IfNotExist, %CONFIG_DIR%
+{
+    FileCreateDir, %CONFIG_DIR%
+    if ErrorLevel  ; エラーが発生した場合
+    {
+        MsgBox, Failed to create configs directory
+        ExitApp
+    }
+}
 ;=========================================
 ; ログ出力関数
 ;=========================================
@@ -44,7 +56,21 @@ WriteLog(message, isError = false) {
 }
 
 ;=========================================
-; アップデートチェック関連の関数
+; 設定ファイルの読み書き
+;=========================================
+WriteSkipVersion(version) {
+    global CONFIG_FILE
+    IniWrite, %version%, %CONFIG_FILE%, Update, SkipVersion
+}
+
+ReadSkipVersion() {
+    global CONFIG_FILE
+    IniRead, skipVersion, %CONFIG_FILE%, Update, SkipVersion, ""
+    return skipVersion
+}
+
+;=========================================
+; アップデートチェック関数
 ;=========================================
 ; アップデートチェックを初期化（起動時に実行）
 InitializeUpdateCheck() {
@@ -110,21 +136,27 @@ CheckUpdate() {
         WriteLog("Current version: " . VERSION)
         
         if (latestVersion != VERSION) {
-            preReleaseText := isPrerelease ? "(Pre-release)" : ""
-            notesText := releaseNotes ? "`n`nRelease Notes:`n" . releaseNotes : ""
-            
-            message := "New version available!`n"
-                    . "Current version: " . VERSION . "`n"
-                    . "New version: " . latestVersion . preReleaseText
-                    . notesText
-            
-            MsgBox, 4,, %message%
-            IfMsgBox Yes
-                Run, https://github.com/deep-dive-713/AHK-Tools/releases/latest
+            ShowUpdateNotification(latestVersion, releaseNotes, isPrerelease)
         }
         
     } catch e {
         WriteLog("Error: " . (IsObject(e) ? "JSON parsing failed" : e), true)
+    }
+}
+
+;=========================================
+; 通知GUI関数（最小限の機能）
+;=========================================
+ShowUpdateNotification(latestVersion, releaseNotes, isPrerelease) {
+    message := "New version available!`n"
+            . "Current version: " . VERSION . "`n"
+            . "New version: " . latestVersion . (isPrerelease ? " (Pre-release)" : "")
+            . notesText := releaseNotes ? "`n`nRelease Notes:`n" . releaseNotes : ""
+    
+    MsgBox, 4,, %message%
+    IfMsgBox Yes
+    {
+        Run, https://github.com/deep-dive-713/AHK-Tools/releases/latest
     }
 }
 
