@@ -1,6 +1,7 @@
-﻿;=========================================
+;=========================================
 ; バージョン管理とアップデートチェック機能
 ;=========================================
+#Requires AutoHotkey v1.1
 #Include %A_ScriptDir%\Lib\JSON.ahk  ; JSONライブラリを追加
 
 ;=========================================
@@ -74,10 +75,8 @@ CheckUpdateWithInterval() {
 ; GitHubから最新バージョンを取得してチェックする関数
 CheckUpdate() {
     try {
-        ; 初期化
         WriteLog("Starting update check")
         
-        ; プレリリースも含めて全てのリリースを取得
         url := "https://api.github.com/repos/deep-dive-713/AHK-Tools/releases"
         tmpFile := A_ScriptDir . "\temp_release.json"
         
@@ -91,38 +90,41 @@ CheckUpdate() {
         FileRead, responseText, %tmpFile%
         FileDelete, %tmpFile%
         
-        ; デバッグ情報の記録
-        WriteLog("Response: " . responseText)
-        
-        ; レスポンスの解析
-        RegExMatch(responseText, "U)""tag_name"":""([^""]+)""", tag)
-        WriteLog("Found tag: " . tag1)
-        
-        ; バージョン番号の抽出
-        latestVersion := RegExReplace(tag1, "^v")
-        WriteLog("Extracted version: " . latestVersion)
-        WriteLog("Current VERSION: " . VERSION)
-        
-        if (latestVersion = "") {
-            WriteLog("Error: Latest version is empty", true)
-            return
+        ; JSONとしてパース
+        releases := JSON.Load(responseText)
+        if (!releases || !releases.Length()) {
+            throw "No releases found"
         }
         
-        WriteLog("Comparing versions: [Latest: " . latestVersion . "] [Current: " . VERSION . "]")
+        ; 最新リリースの情報を取得
+        latestRelease := releases[1]
+        tag := latestRelease.tag_name
+        isPrerelease := latestRelease.prerelease
+        releaseNotes := latestRelease.body
+        
+        ; バージョン番号の抽出
+        latestVersion := RegExReplace(tag, "^v")
+        
+        WriteLog("Latest version: " . latestVersion)
+        WriteLog("Is prerelease: " . (isPrerelease ? "Yes" : "No"))
+        WriteLog("Current version: " . VERSION)
         
         if (latestVersion != VERSION) {
-            WriteLog("Update needed: versions are different")
-            MsgBox, 4,, Update available (%latestVersion%). Would you like to open the download page?
+            preReleaseText := isPrerelease ? "(Pre-release)" : ""
+            notesText := releaseNotes ? "`n`nRelease Notes:`n" . releaseNotes : ""
             
+            message := "New version available!`n"
+                    . "Current version: " . VERSION . "`n"
+                    . "New version: " . latestVersion . preReleaseText
+                    . notesText
+            
+            MsgBox, 4,, %message%
             IfMsgBox Yes
                 Run, https://github.com/deep-dive-713/AHK-Tools/releases/latest
-        } else {
-            WriteLog("No update needed: versions are same")
         }
         
     } catch e {
-        WriteLog("Error: " . (IsObject(e) ? "Download failed" : e), true)
-        WriteLog("Debug: " . e, true)
+        WriteLog("Error: " . (IsObject(e) ? "JSON parsing failed" : e), true)
     }
 }
 
