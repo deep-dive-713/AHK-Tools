@@ -93,17 +93,17 @@
         SendMessage, 0x114, 1, 0, %fcontrol%, A
     return
     
-    ; チルトホイールの左右スクロール
-    WheelLeft::
-    ControlGetFocus, fcontrol, A
-    Loop 1
-        SendMessage, 0x114, 0, 0, %fcontrol%, A
-    return
-    WheelRight::
-    ControlGetFocus, fcontrol, A
-    Loop 1
-        SendMessage, 0x114, 1, 0, %fcontrol%, A
-    return
+    ; ; チルトホイールの左右スクロール
+    ; WheelLeft::
+    ; ControlGetFocus, fcontrol, A
+    ; Loop 1
+    ;     SendMessage, 0x114, 0, 0, %fcontrol%, A
+    ; return
+    ; WheelRight::
+    ; ControlGetFocus, fcontrol, A
+    ; Loop 1
+    ;     SendMessage, 0x114, 1, 0, %fcontrol%, A
+    ; return
 #IfWinActive
 
 ;-----------------------------------------
