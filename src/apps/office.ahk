@@ -60,7 +60,7 @@
         }
         else                        ; ダブルタップの場合
         {
-            Send, +{Enter}          ; Alt+Enterで改行を挿入
+            Send, !{Enter}          ; Alt+Enterで改行を挿入
         }
     return
     
