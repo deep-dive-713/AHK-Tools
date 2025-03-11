@@ -1,2 +1,5 @@
 @echo off
-start "" "C:\Program Files\AutoHotkey\AutoHotkeyU64_UIA.exe" "C:\Users\deep_dive_\Documents\AutoHotKey\main.ahk"
+:: main.ahkを格納しているPATHを入力
+start "" "C:\Program Files\AutoHotkey\AutoHotkeyU64_UIA.exe" "[main.ahkを格納しているPATHを入力]"
+:: 具体例
+:: start "" "C:\Program Files\AutoHotkey\AutoHotkeyU64_UIA.exe" ""C:\Users\testuser\Documents\AutoHotKey\main.ahk""

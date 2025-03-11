@@ -27,7 +27,7 @@ OnExit, ExitSub
 ; 外部スクリプトの読み込み
 ;=========================================
 ; バージョン管理とアップデート機能
-#Include %A_ScriptDir%\src\core\version.ahk
+; #Include %A_ScriptDir%\src\core\version.ahk
 
 ; 基本機能
 #Include %A_ScriptDir%\src\core\search.ahk
