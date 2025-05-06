@@ -1,25 +1,22 @@
-#SingleInstance force
+#Requires AutoHotkey v2.0
+#SingleInstance Force
 
 ;=========================================
-; Word, PowerPoint の設定
+; Mouse Extensions for Word & PowerPoint
 ;=========================================
 
 ;-----------------------------------------
-; PowerPoint: マウスホイールで左右スクロール
+; PowerPoint: Horizontal scrolling with mouse wheel
 ;-----------------------------------------
-#IfWinActive ahk_exe POWERPNT.EXE
-    +WheelUp::  ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; Shift+ホイール上で左スクロール
-    +WheelDown::ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; Shift+ホイール下で右スクロール
-    ; WheelLeft::ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,10)  ; 左スクロール（チルト左）
-    ; WheelRight::ComObjActive("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,10,0) ; 右スクロール（チルト右）
-#IfWinActive
+#HotIf WinActive("ahk_exe POWERPNT.EXE")
+    +WheelUp::   ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; Shift+Wheel Up→Scroll Left
+    +WheelDown:: ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; Shift+Wheel Down→Scroll Right
+#HotIf
 
 ;-----------------------------------------
-; Word: マウスホイールで左右スクロール
+; Word: Horizontal scrolling with mouse wheel
 ;-----------------------------------------
-#IfWinActive ahk_exe WINWORD.EXE
-    +WheelUp::  ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,0,10) ; Shift+ホイール上で左スクロール
-    +WheelDown::ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,10,0) ; Shift+ホイール下で右スクロール
-    ; WheelLeft:: ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,0,10) ; 左スクロール（チルト左）
-    ; WheelRight::ComObjActive("Word.Application").ActiveWindow.SmallScroll(0,0,10,0) ; 右スクロール（チルト右）
-#IfWinActive
+#HotIf WinActive("ahk_exe WINWORD.EXE")
+    +WheelUp::   ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; Shift+Wheel Up→Scroll Left
+    +WheelDown:: ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; Shift+Wheel Down→Scroll Right
+#HotIf

@@ -5,21 +5,23 @@
 ; 入力しづらい記号をより簡単に入力できるようにカスタマイズ
 
 ; ダブルクォート (") の入力
-F13 & 7::Send, {"}                  ; F13 + 7 で " を入力
+F13 & 7::Send '""'                  ; F13 + 7 で " を入力
 
 ; 角括弧・波括弧の入力
-F13 & 8::                           ; F13 + 8 で [ または { を入力
-    if GetKeyState("Shift") {       ; Shiftキーを押しながら
-        Send, {{}                   ; 波括弧 { を入力
+F13 & 8:: {                         ; F13 + 8 で [ または { を入力
+    if GetKeyState("Shift") {       ; 
+        Send "{{}"                  ; Shift + F13 + 8 -> {
         return
     }
-    Send, {[}                       ; 角括弧 [ を入力
-return
+    Send "{[}"                      ;         F13 + 8 -> [
+}
 
-F13 & 9::                           ; F13 + 9 で ] または } を入力
-    if GetKeyState("Shift") {       ; Shiftキーを押しながら
-        Send, {}}                   ; 波括弧 } を入力
+F13 & 9:: {                         ; F13 + 9 で ] または } を入力
+    if GetKeyState("Shift") {       ; 
+        Send "{}}"                  ; Shift + F13 + 9 -> }
         return
     }
-    Send, {]}                       ; 角括弧 ] を入力
-return
+    Send "{]}"                      ;         F13 + 9 -> ]
+}
+
+

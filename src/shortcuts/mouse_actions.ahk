@@ -1,9 +1,9 @@
 ;=========================================
 ; マウス操作関連のショートカット
 ;=========================================
-F13 & WheelUp::   Send, {Blind}{up}    ; F13キー+マウスホイール上 -> カーソルが上に移動
-F13 & WheelDown:: Send, {Blind}{down}  ; F13キー+マウスホイール下 -> カーソルが下に移動
+F13 & WheelUp::   Send "{Blind}{Up}"    ; F13キー+マウスホイール上 -> カーソルが上に移動
+F13 & WheelDown:: Send "{Blind}{Down}"  ; F13キー+マウスホイール下 -> カーソルが下に移動
 
 ; マウスにチルト機能がある場合、以下のショートカットが利用可能です
-F13 & WheelRight::Send, {Blind}{right} ; F13キー+マウスホイール右 -> カーソルが右に移動
-F13 & WheelLeft:: Send, {Blind}{left}  ; F13キー+マウスホイール左 -> カーソルが左に移動
+F13 & WheelRight::Send "{Blind}{Right}" ; F13キー+マウスホイール右 -> カーソルが右に移動
+F13 & WheelLeft:: Send "{Blind}{Left}"  ; F13キー+マウスホイール左 -> カーソルが左に移動

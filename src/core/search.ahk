@@ -7,32 +7,36 @@
 ; 3. その他の文字列：Google検索を実行
 ;=========================================
 
-search(){
+search() {
     ; クリップボードの内容をバックアップ
-    bk := ClipboardAll
-    Clipboard := ""
+    bk := ClipboardAll()
+    A_Clipboard := ""
     
     ; 選択テキストをクリップボードにコピー
-    Send, ^{c}
-    Sleep, 50                        ; クリップボードの操作完了を待つ
-    ClipWait, 2                      ; クリップボードにデータが来るまで待つ（最大2秒）
-    if ErrorLevel                    ; タイムアウトした場合
+    Send "^c"
+    Sleep 50                        ; クリップボードの操作完了を待つ
+    ClipWait 2                      ; クリップボードにデータが来るまで待つ（最大2秒）
+    if !ClipWait(2)                 ; タイムアウトした場合
     {
-        Clipboard := bk              ; クリップボードを復元
+        A_Clipboard := bk           ; クリップボードを復元
         return
     }
     
     ; クリップボードの内容を整形
-    selectedText := Trim(Clipboard)  ; 文字列の前後のスペース、タブ、改行を削除
+    selectedText := Trim(A_Clipboard)  ; 文字列の前後のスペース、タブ、改行を削除
     
     ; パス情報を分解
-    SplitPath, selectedText, name, dir, ext, noext, drive  ; Trim後のselectedTextを使用
+    SplitPath selectedText, &name, &dir, &ext, &noext, &drive  ; Trim後のselectedTextを使用
     
     ; テキストの種類を判定して適切な処理を実行
-    if (InStr(selectedText, "http://") = 1 || InStr(selectedText, "https://") = 1 || InStr(selectedText, "www.") = 1){
-        ; URLとして処理
+    if (InStr(selectedText, "http://") = 1
+        || InStr(selectedText, "https://") = 1
+        || InStr(selectedText, "www.") = 1
+        || InStr(selectedText, "ttp://") = 1
+        || InStr(selectedText, "ttps://") = 1
+    ) {
         doWeb(selectedText, drive, dir)
-    } else if (drive != ""){
+    } else if (drive != "") {
         ; ドライブレターがある場合はローカルパスとして処理
         doLocal(selectedText)
     } else {
@@ -41,20 +45,20 @@ search(){
     }
     
     ; クリップボードを元の状態に復元
-    Clipboard := bk
+    A_Clipboard := bk
 }
 
 ;=========================================
 ; ローカルパスを開く
 ;=========================================
-doLocal(selectedPath){
-    if (selectedPath != ""){
+doLocal(selectedPath) {
+    if (selectedPath != "") {
         ; フルパスを使用してエクスプローラーで開く
         try {
-            Run, explorer.exe "%selectedPath%"  ; パスをダブルクオートで囲む
+            Run 'explorer.exe "' selectedPath '"'  ; パスをダブルクオートで囲む
             return true
-        } catch {
-            MsgBox, エラー: フォルダを開けませんでした。`nPath: %selectedPath%
+        } catch as err {
+            MsgBox "エラー: フォルダを開けませんでした。`nPath: " selectedPath
             return false
         }
     }
@@ -64,18 +68,18 @@ doLocal(selectedPath){
 ;=========================================
 ; Web関連の処理
 ;=========================================
-doWeb(str, drive, dir){
+doWeb(str, drive, dir) {
     isWeb := ""
     ; & をエスケープ
     str := StrReplace(str, "&", "%26")  ; & をエスケープ
     str := StrReplace(str, " ", "+")    ; スペースを+に変換
-    if((isWeb := isURL(drive, str)) != ""){                   ; 完全なURLの場合
-    }else if((isWeb := isURLlike(str, drive, dir)) != ""){    ; URLっぽい文字列の場合
-    }else{
-        isWeb := getWebSearch(str)                            ; 検索用URLの生成
+    if ((isWeb := isURL(drive, str)) != "") {                ; 完全なURLの場合
+    } else if ((isWeb := isURLlike(str, drive, dir)) != "") {  ; URLっぽい文字列の場合
+    } else {
+        isWeb := getWebSearch(str)                           ; 検索用URLの生成
     }
-    if(isWeb != ""){
-        Run, %isWeb%
+    if (isWeb != "") {
+        Run isWeb
         return true
     }
     return false
@@ -85,26 +89,26 @@ doWeb(str, drive, dir){
 ; URL判定関連の関数群
 ;=========================================
 ; 完全なURLかどうかを判定
-isURL(drive, dir){
-    if(InStr(dir, "http://") = 1 || InStr(dir, "https://") = 1){
+isURL(drive, dir) {
+    if (InStr(dir, "http://") = 1 || InStr(dir, "https://") = 1) {
         return dir
     }
     return ""
 }
 
 ; URLっぽい文字列の判定と修正
-isURLlike(str, drive, dir){
-    if(InStr(drive, "ttp://") = 1 || InStr(drive, "ttps://") = 1){
+isURLlike(str, drive, dir) {
+    if (InStr(drive, "ttp://") = 1 || InStr(drive, "ttps://") = 1) {
         return "h" . dir                    ; 先頭のhを補完
-    }else if(drive = "" && InStr(str, "www.") = 1){
+    } else if (drive = "" && InStr(str, "www.") = 1) {
         return "http://" . str              ; http://を補完
     }
     return ""
 }
 
 ; Google検索用URLの生成
-getWebSearch(str){
-    if(str != ""){
+getWebSearch(str) {
+    if (str != "") {
         return "http://www.google.com/search?q=" . str
     }
     return ""
