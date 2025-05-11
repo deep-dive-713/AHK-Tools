@@ -1,7 +1,7 @@
 ;=========================================
 ; ブラウザ関連の設定
 ;=========================================
-#HotIf WinActive("ahk_exe msedge.exe")
+#HotIf WinActive("ahk_exe msedge.exe") or WinActive("ahk_exe chrome.exe") or WinActive("ahk_exe brave.exe")
     F13 & WheelUp::  Send "^+{Tab}" ; 前のタブ
     F13 & WheelDown::Send "^{Tab}"  ; 次のタブ
     F13 & y::Send "^+{Tab}"         ; 前のタブ

@@ -34,14 +34,22 @@ A_HotkeyInterval := 2000
 A_MaxHotkeysPerInterval := 200
 
 ;=========================================
-; 外部スクリプトの読み込み
+; 基本的なショートカット
 ;=========================================
-; バージョン管理とアップデート機能（メンテナンス中）
-; #Include "src\core\version.ahk"
+; CapsLock切り替え
+RShift & F13:: {
+    if GetKeyState("CapsLock", "T")
+        SetCapsLockState "AlwaysOff"
+    else
+        SetCapsLockState "On"
+}
 
+;=========================================
+; サブスクリプトの読み込み
+;=========================================
 ; 基本機能
-#Include "src\core\search.ahk"
-#Include "src\core\image_display.ahk"
+#Include "src\core\search.ahk"          ; クイック検索
+#Include "src\core\image_display.ahk"   ; 画像表示
 
 ; F13 + キー コマンド群
 #Include "src\shortcuts\cursor_movement.ahk"    ; カーソル移動
@@ -58,58 +66,41 @@ A_MaxHotkeysPerInterval := 200
 #Include "src\apps\JIS2US.ahk"          ; JIS/US配列変換（JIS配列キーボードを使っている人向け、US配列の人は要コメントアウト）
 #Include "src\apps\other_apps.ahk"      ; その他アプリ
 
-;=========================================
-; 基本的なショートカット
-;=========================================
-; CapsLock切り替え
-RShift & F13:: {
-    if GetKeyState("CapsLock", "T")
-        SetCapsLockState "AlwaysOff"
-    else
-        SetCapsLockState "On"
-}
-
-; テキスト検索
-+MButton:: search()
+; バージョン管理とアップデート機能（メンテナンス中）
+; #Include "src\core\version.ahk"
 
 ;=========================================
-; サブスクリプトの実行と終了処理（不要かも）
+; サブスクリプトの実行と終了処理
 ;=========================================
 ; word_ppt.ahkを別プロセスとして実行し、PIDを保存
-; WordPptPID := ""
-; try {
-;     MsgBox "AutoHotkey Path: " A_AhkPath  ; 現在のAHKパスを確認
-    
-;     script_path := '"' A_ScriptDir '\src\apps\word_ppt.ahk"'
-;     command := '"' A_AhkPath '" ' script_path
-    
-;     MsgBox "実行コマンド: " command
-    
-;     WordPptPID := Run(command,, "Hide")
-;     if !WordPptPID {
-;         MsgBox "PID取得失敗`nコマンド: " command
-;     } else {
-;         MsgBox "PID取得成功: " WordPptPID
-;     }
-; } catch as err {
-;     MsgBox "エラー発生: " err.Message
-; }
+WordPptPID := ""
+try {
+    exe_path := "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe"
+    script_path := A_ScriptDir "\src\apps\word_ppt.ahk"
+    script_path := A_ScriptDir "\src\apps\word_ppt_2016.ahk" ; Office2016用
 
-; Office2016用
-; WordPptPID := ""
-; try {
-;     WordPptPID := Run(A_ScriptDir "\src\apps\word_ppt_2016.ahk")
-; }
+    
+    Run '"' exe_path '" "' script_path '"',, "Hide", &WordPptPID
+    
+    ; for debug
+    ; if !WordPptPID {
+    ;     MsgBox "PID取得失敗"
+    ; } else {
+    ;     MsgBox "PID取得成功: " WordPptPID
+    ; }
+} catch as err {
+    MsgBox "エラー発生: " err.Message
+}
 
-; スクリプト終了時の処理（不要かも）
-; OnExit ExitHandler
+; スクリプト終了時の処理
+OnExit ExitHandler
 
-;=========================================
-; 終了処理（不要かも）
-;=========================================
-; ExitSub:
-; ExitHandler(ExitReason, ExitCode) {
-;     global WordPptPID
-;     if WordPptPID
-;         ProcessClose WordPptPID
-; }
+; =========================================
+; 終了処理
+; =========================================
+ExitSub:
+ExitHandler(ExitReason, ExitCode) {
+    global WordPptPID
+    if WordPptPID
+        ProcessClose WordPptPID
+}

@@ -3,6 +3,13 @@
 *.ahk.bak
 *.ahk~
 
+# 開発中ファイル
+lib/Gdip_All.ahk
+
+
+# 不要な画像ファイル
+assets/images/*.jpg
+
 # ドキュメントを除外
 # docs/
 config/
