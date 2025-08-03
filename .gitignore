@@ -28,6 +28,7 @@ desktop.ini
 *.swo
 .vscode/
 .idea/
+.cursor/
 
 # 個人設定ファイル
 user_config.ini
@@ -40,3 +41,7 @@ logs/
 # テスト関連
 test/
 tests/
+backup_registry.bat
+restore_registry.bat
+capslock_to_f13.reg
+restore_capslock.reg

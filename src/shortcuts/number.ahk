@@ -1,10 +1,10 @@
-F14 & a:: Send "{Blind}{Numpad0}"
-F14 & x:: Send "{Blind}{Numpad1}"
-F14 & c:: Send "{Blind}{Numpad2}"
-F14 & v:: Send "{Blind}{Numpad3}"
-F14 & s:: Send "{Blind}{Numpad4}"
-F14 & d:: Send "{Blind}{Numpad5}"
-F14 & f:: Send "{Blind}{Numpad6}"
-F14 & w:: Send "{Blind}{Numpad7}"
-F14 & e:: Send "{Blind}{Numpad8}"
-F14 & r:: Send "{Blind}{Numpad9}"
+F14 & a:: Send "{Blind}{Numpad0}"  ; F14 + a → 0
+F14 & x:: Send "{Blind}{Numpad1}"  ; F14 + x → 1
+F14 & c:: Send "{Blind}{Numpad2}"  ; F14 + c → 2
+F14 & v:: Send "{Blind}{Numpad3}"  ; F14 + v → 3
+F14 & s:: Send "{Blind}{Numpad4}"  ; F14 + s → 4
+F14 & d:: Send "{Blind}{Numpad5}"  ; F14 + d → 5
+F14 & f:: Send "{Blind}{Numpad6}"  ; F14 + f → 6
+F14 & w:: Send "{Blind}{Numpad7}"  ; F14 + w → 7
+F14 & e:: Send "{Blind}{Numpad8}"  ; F14 + e → 8
+F14 & r:: Send "{Blind}{Numpad9}"  ; F14 + r → 9

@@ -8,19 +8,19 @@
 ; PowerPoint: Horizontal scrolling with mouse wheel
 ;-----------------------------------------
 #HotIf WinActive("ahk_exe POWERPNT.EXE")
-    +WheelUp::   ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; Shift+Wheel Up   → Scroll Left
-    +WheelDown:: ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; Shift+Wheel Down → Scroll Right
-    WheelLeft::  ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; WheelLeft        → Scroll Left
-    WheelRight:: ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; WheelRight       → Scroll Right
+    +WheelUp::   ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; Shift + ホイール上 → 左スクロール
+    +WheelDown:: ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; Shift + ホイール下 → 右スクロール
+    WheelLeft::  ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; チルト左 → 左スクロール
+    WheelRight:: ComObject("PowerPoint.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; チルト右 → 右スクロール
 #HotIf
 
 ;-----------------------------------------
 ; Word: Horizontal scrolling with mouse wheel
 ;-----------------------------------------
 #HotIf WinActive("ahk_exe WINWORD.EXE")
-    +WheelUp::   ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; Shift+Wheel Up   → Scroll Left
-    +WheelDown:: ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; Shift+Wheel Down → Scroll Right
-    WheelLeft::  ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; WheelLeft        → Scroll Left
-    WheelRight:: ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; WheelRight       → Scroll Right
+    +WheelUp::   ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; Shift + ホイール上 → 左スクロール
+    +WheelDown:: ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; Shift + ホイール下 → 右スクロール
+    WheelLeft::  ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,0,10)   ; チルト左 → 左スクロール
+    WheelRight:: ComObject("Word.Application").ActiveWindow.SmallScroll(0,0,10,0)   ; チルト右 → 右スクロール
 #HotIf
 

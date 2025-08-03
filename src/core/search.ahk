@@ -29,7 +29,7 @@ search() {
     selectedText := Trim(A_Clipboard)  ; 文字列の前後のスペース、タブ、改行を削除
     
     ; パス情報を分解
-    SplitPath selectedText, &name, &dir, &ext, &noext, &drive  ; Trim後のselectedTextを使用
+    SplitPath selectedText, &name, &dir, & ext, &noext, &drive  ; Trim後のselectedTextを使用
     
     ; テキストの種類を判定して適切な処理を実行
     if (InStr(selectedText, "http://") = 1
