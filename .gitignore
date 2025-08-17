@@ -45,3 +45,5 @@ backup_registry.bat
 restore_registry.bat
 capslock_to_f13.reg
 restore_capslock.reg
+core/version.ahk
+

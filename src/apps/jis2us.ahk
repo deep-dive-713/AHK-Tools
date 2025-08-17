@@ -23,7 +23,7 @@ ToggleJIS2US() {
 
 #HotIf WinActive("ahk_exe etxc.exe") and JIS2USEnabled
     ; 1段目
-    !::Send "{?}"   ; !
+    !::Send "+{sc002}"   ; !
     "::Send "+{sc028}"   ; "
     #::Send "+{sc004}"   ; #
     $::Send "+{sc005}"   ; $
@@ -41,7 +41,7 @@ ToggleJIS2US() {
 
     ; 2段目
     @::Send "+{sc003}"   ; @
-    `::Send "{sc029 2}"  ; ` (半角/全角 を2回送信している)
+    `::Send "{sc029 2}"  ; ` (半角/全角 を2回送信)
     [::Send "{sc01A}"    ; [
     {::Send "+{sc01A}"   ; {
     

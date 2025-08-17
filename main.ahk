@@ -77,8 +77,7 @@ WordPptPID := ""
 try {
     exe_path := "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe"
     script_path := A_ScriptDir "\src\apps\word_ppt.ahk"
-    script_path := A_ScriptDir "\src\apps\word_ppt_2016.ahk" ; Office2016用
-
+    ; script_path := A_ScriptDir "\src\apps\word_ppt_2016.ahk" ; Office2016用
     
     Run '"' exe_path '" "' script_path '"',, "Hide", &WordPptPID
     

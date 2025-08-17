@@ -50,17 +50,7 @@
 ; OneNote: カスタムスクロールと移動
 ;-----------------------------------------
 #HotIf WinActive("ahk_exe ONENOTE.EXE")
-    ; F13またはShiftとの組み合わせでカーソル移動
-    F13 & i::DllCall("keybd_event", "UInt", 0x26, "UInt", 0, "UInt", 1, "Ptr", 0) ; F13 + I → 上へ
-    F13 & k::DllCall("keybd_event", "UInt", 0x28, "UInt", 0, "UInt", 1, "Ptr", 0) ; F13 + K → 下へ
-    F13 & WheelUp::Send "^{PgUp}"       ; F13 + ホイール上   → 上のページへ
-    F13 & WheelDown::Send "^{PgDn}"     ; F13 + ホイール下   → 下のページへ
-    F13 & t::Send "^{PgUp}"             ; F13 + T           → 上のページへ
-    F13 & g::Send "^{PgDn}"             ; F13 + G           → 下のページへ
-    F13 & e::Send "^+{Tab}"             ; F13 + E           → 左のタブへ
-    F13 & r::Send "^{Tab}"              ; F13 + R           → 右のタブへ
-    Shift & WheelLeft::Send "^+{Tab}"   ; Shift + ホイール左 → 左のタブへ
-    Shift & WheelRight::Send "^{Tab}"   ; Shift + ホイール右 → 右のタブへ
+ 
 
     ; カスタムスクロール制御
     ; Shift+ホイールで左右スクロール
