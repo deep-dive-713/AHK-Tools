@@ -7,10 +7,10 @@ F13 & n:: Send "{Blind}{PgUp}"       ; F13 + n         → Page Up
 F13 & m:: Send "{Blind}{PgDn}"       ; F13 + m         → Page Down
 F13 & BS::Send "{Blind}{Delete}"     ; F13 + BackSpace → Delete
 
-F13 & t::Send "^{PgUp}"             ; F13 + T → 上のページへ
-F13 & g::Send "^{PgDn}"             ; F13 + G → 下のページへ
-F13 & e::Send "^+{Tab}"             ; F13 + E → 左のタブへ
-F13 & r::Send "^{Tab}"              ; F13 + R → 右のタブへ
+F13 & t::Send "^+{Tab}"             ; F13 + T → 上のタブへ
+F13 & g::Send "^{Tab}"              ; F13 + G → 下のタブへ
+F13 & e::Send "^{PgUp}"             ; F13 + E → 左のページへ
+F13 & r::Send "^{PgDn}"             ; F13 + R → 右のページへ
 
 ;=========================================
 ; PDF改行コード処理機能
