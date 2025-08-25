@@ -1,4 +1,4 @@
 *.md export-ignore
 .gitattributes export-ignore
 docs/ export-ignore
-*.ahk text eol=crlf
+*.ahk *.bat text eol=crlf
